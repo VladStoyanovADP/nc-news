@@ -10,7 +10,7 @@ const getTopics = (req, res) => {
 };
 
 const getArticles = (req, res) => {
-  return selectArticles().then((articles) => {
+  return selectArticles().then(articles => {
     res.status(200).send({ articles });
   });
 };
