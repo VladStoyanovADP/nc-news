@@ -2,7 +2,7 @@ const request = require("supertest");
 const app = require("./app");
 const seed = require("../seeds/seed");
 const db = require("../connection");
-const index = require("../data/test-data/index");;
+const index = require("../data/test-data/index");
 
 beforeEach(() => {
     return seed(index);
