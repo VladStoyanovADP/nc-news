@@ -30,8 +30,10 @@ describe("get /api/topics", () => {
     test("checks whether the response's length is bigger than 0", () => {
       return request(app)
         .get("/api/topics")
-        .then((res) => {
-          expect(res.body.topics.length).toBeGreaterThan(0);
+        .then((res) =>
+        {
+          console.log(index)
+          expect(res.body.topics.length).toBe(index.topicData.length);
         });
     });
 });
@@ -66,7 +68,7 @@ describe("get /api/articles", () => {
     return request(app)
       .get("/api/articles")
       .then((res) => {
-        expect(res.body.articles.length).toBeGreaterThan(0);
+        expect(res.body.articles.length).toBe(index.articleData.length);
       });
   });
 
