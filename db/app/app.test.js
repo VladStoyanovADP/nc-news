@@ -35,7 +35,6 @@ describe("get /api/articles", () => {
     return request(app)
       .get("/api/articles")
       .then((res) => {
-        console.log(res.body)
         const article = res.body.articles[0];
         expect(article).toHaveProperty("title");
         expect(article).toHaveProperty("topic");
