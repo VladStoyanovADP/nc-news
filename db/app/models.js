@@ -21,7 +21,20 @@ function selectArticles() {
     .then((result) => result.rows);
 }
 
+function selectArticleByID(id) {
+  return db
+    .query(
+      `
+      SELECT * 
+      FROM articles 
+      WHERE article_id = $1;
+    `, [id]
+    )
+    .then((result) => result.rows[0]);
+}
+
 module.exports = {
   selectTopics,
   selectArticles,
+  selectArticleByID,
 };
