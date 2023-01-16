@@ -1,4 +1,4 @@
-const { getTopics } = require("./controllers.js");
+const { getTopics, getArticles } = require("./controllers.js");
 const express = require("express");
 const app = express();
 
@@ -6,6 +6,6 @@ app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
-app.listen(8080, () => console.log("App listening on port 8080!"));
+app.get("/api/articles", getArticles);
 
 module.exports = app;
