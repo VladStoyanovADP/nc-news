@@ -103,7 +103,7 @@ describe("get /api/articles", () => {
    });
 });
 
-describe.only("get /api/articles", () =>
+describe("get /api/articles", () =>
 {
   test("responds with status 200", () => {
     return request(app).get("/api/articles/3").expect(200);
