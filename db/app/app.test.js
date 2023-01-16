@@ -16,20 +16,18 @@ describe("get /api/topics", () => {
   test("responds with status 200", () => {
     return request(app).get("/api/topics").expect(200);
   });
-  test("returns correct body", () => {
+  test("rchecks whether each article has the correct keys", () => {
     return request(app)
       .get("/api/topics")
-      .then((res) =>
-      {
-        res.body.topics.forEach(topic =>
-        {
+      .then((res) => {
+        res.body.topics.forEach((topic) => {
           expect(topic).toHaveProperty("description");
           expect(topic).toHaveProperty("slug");
-        })
+        });
       });
   });
 
-    test("response is not empty", () => {
+    test("checks whether the response's length is bigger than 0", () => {
       return request(app)
         .get("/api/topics")
         .then((res) => {
@@ -44,7 +42,7 @@ describe("get /api/articles", () => {
     return request(app).get("/api/articles").expect(200);
   });
 
-  test("returns correct body", () => {
+  test("checks whether each article has the correct keys", () => {
     return request(app)
       .get("/api/articles")
       .then((res) =>
@@ -64,7 +62,7 @@ describe("get /api/articles", () => {
       });
   });
 
-  test("response is not empty", () => {
+  test("checks whether the response's length is bigger than 0", () => {
     return request(app)
       .get("/api/articles")
       .then((res) => {
@@ -72,7 +70,7 @@ describe("get /api/articles", () => {
       });
   });
 
-  test("response has correct types", () => {
+  test("checks the type of the values", () => {
     return request(app)
       .get("/api/articles")
       .then((res) =>
@@ -92,7 +90,7 @@ describe("get /api/articles", () => {
       });
   });
 
-   test("response has correct types", () => {
+   test("checks whether the articles are ordered by date created", () => {
      return request(app)
        .get("/api/articles")
        .then((res) => {
