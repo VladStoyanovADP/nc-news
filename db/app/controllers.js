@@ -7,6 +7,8 @@ const {
   patchArticleByID,
 } = require("./models.js");
 
+const endpointsInfo = require("../endpoints");
+
 const getTopics = (req, res, next) => {
   return selectTopics()
     .then((topics) => {
@@ -74,6 +76,10 @@ function patchArticle(req, res, next) {
     .catch(next);
 }
 
+const getAllEndpoints = (req, res) => {
+  response.status(200).send({ endpointsInfo });
+};
+
 module.exports = {
   getTopics,
   getArticles,
@@ -81,4 +87,5 @@ module.exports = {
   getCommentsOfArticle,
   postComment,
   patchArticle,
+  getAllEndpoints,
 };
