@@ -32,7 +32,6 @@ describe("get /api/topics", () => {
         .get("/api/topics")
         .then((res) =>
         {
-          console.log(index)
           expect(res.body.topics.length).toBe(index.topicData.length);
         });
     });
@@ -101,4 +100,60 @@ describe("get /api/articles", () => {
           });
        });
    });
+});
+
+describe("/api/articles/:id/comments", () => {
+  describe("POST", () => {
+    test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
+      const id = 3;
+
+      return request(app)
+        .post(`/api/articles/${id}/comments`)
+        .send({
+          body: "Cool new comment",
+          username: "butter_bridge",
+        })
+        .expect(201)
+        .then(({ body }) => {
+          const comment = body.comment;
+
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author", "butter_bridge");
+          expect(comment).toHaveProperty("body", "Cool new comment");
+          expect(comment).toHaveProperty("article_id", id);
+        });
+    });
+
+    test("400: Should respond with bad request for invalid body on req", () => {
+      const id = 3;
+
+      return request(app)
+        .post(`/api/articles/${id}/comments`)
+        .send({
+          bod: "Cool new comment",
+          usename: "butter_bridge",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+
+    test("404: Should respond with not found for a id that does not have corresponding article", () => {
+      const id = "999";
+
+      return request(app)
+        .post(`/api/articles/${id}/comments`)
+        .send({
+          body: "Cool new comment",
+          username: "butter_bridge",
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
 });

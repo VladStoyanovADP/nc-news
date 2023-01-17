@@ -21,7 +21,47 @@ function selectArticles() {
     .then((result) => result.rows);
 }
 
+function selectArticleByID(id) {
+  return db
+    .query(
+      `
+      SELECT * 
+      FROM articles 
+      WHERE article_id = $1;
+    `,
+      [id]
+    )
+    .then((result) => {
+      return result.rows.length !== 0
+        ? result.rows[0]
+        : Promise.reject({ status: 404, msg: "Not Found" });
+    });
+}
+
+function postCommentToArticle(id, body) {
+  if (body.body && body.username)
+  {
+    return db
+      .query(
+        `
+      INSERT INTO comments (author, body, article_id)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `,
+        [body.username, body.body, id]
+      )
+      .then((result) =>
+      {
+        return result.rows[0]
+      });
+  } else {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+}
+
 module.exports = {
   selectTopics,
   selectArticles,
+  selectArticleByID,
+  postCommentToArticle,
 };
