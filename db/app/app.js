@@ -6,6 +6,7 @@ const {
 } = require("./controllers.js");
 const { postgresErr, customErr } = require("./errorHandlers");
 const express = require("express");
+const { postgresErr, customErr } = require("./errorHandlers");
 const app = express();
 
 app.use(express.json());
