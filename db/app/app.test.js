@@ -105,54 +105,47 @@ describe("get /api/articles", () => {
 describe("/api/articles/:id/comments", () => {
   describe("POST", () => {
     test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
-      const id = 3;
-
       return request(app)
-        .post(`/api/articles/${id}/comments`)
+        .post(`/api/articles/3/comments`)
         .send({
-          body: "Cool new comment",
+          body: "double paddy",
           username: "butter_bridge",
         })
         .expect(201)
-        .then(({ body }) => {
-          const comment = body.comment;
-
+        .then((res) => {
+          const comment = res.body.comment;
           expect(comment).toHaveProperty("comment_id");
           expect(comment).toHaveProperty("votes");
           expect(comment).toHaveProperty("created_at");
           expect(comment).toHaveProperty("author", "butter_bridge");
-          expect(comment).toHaveProperty("body", "Cool new comment");
-          expect(comment).toHaveProperty("article_id", id);
+          expect(comment).toHaveProperty("body", "double paddy");
+          expect(comment).toHaveProperty("article_id", 3);
         });
     });
 
     test("400: Should respond with bad request for invalid body on req", () => {
-      const id = 3;
-
       return request(app)
-        .post(`/api/articles/${id}/comments`)
+        .post(`/api/articles/3/comments`)
         .send({
-          bod: "Cool new comment",
-          usename: "butter_bridge",
+          notBody: "I hope that their first child, be a masculine child.",
+          username: "The Godfather",
         })
         .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Bad Request");
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad Request");
         });
     });
 
     test("404: Should respond with not found for a id that does not have corresponding article", () => {
-      const id = "999";
-
       return request(app)
-        .post(`/api/articles/${id}/comments`)
+        .post(`/api/articles/999/comments`)
         .send({
-          body: "Cool new comment",
-          username: "butter_bridge",
+          body: "I hope that their first child, be a masculine child.",
+          username: "The Godfather"
         })
         .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Not Found");
+        .then((res) => {
+          expect(res.body.msg).toBe("Not Found");
         });
     });
   });
