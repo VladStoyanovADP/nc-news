@@ -17,9 +17,9 @@ const getTopics = (req, res, next) => {
 };
 
 const getArticles = (req, res, next) => {
-  return selectArticles()
-    .then((articles) =>
-    {
+  const { sort_by, order, topic } = req.query;
+  return selectArticles(sort_by, order, topic)
+    .then((articles) => {
       res.status(200).send({ articles });
     })
     .catch(next);
