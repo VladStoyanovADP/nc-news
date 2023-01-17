@@ -315,4 +315,29 @@ describe("PATCH", () => {
   });
 });
 
+describe("get /api/users", () => {
+  test("responds with status 200", () => {
+    return request(app).get("/api/users").expect(200);
+  });
+  test("rchecks whether each users has the correct keys", () => {
+    return request(app)
+      .get("/api/users")
+      .then((res) => {
+        res.body.users.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+        });
+      });
+  });
+
+  test("checks whether the response's length is bigger than 0", () => {
+    return request(app)
+      .get("/api/users")
+      .then((res) => {
+        expect(res.body.users.length).toBe(index.userData.length);
+      });
+  });
+});
+
 

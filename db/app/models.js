@@ -98,6 +98,10 @@ function patchArticleByID(id, body) {
   }
 }
 
+function selectUsers() {
+  return db.query(`SELECT * FROM users`).then((users) => users.rows);
+}
+
 
 module.exports = {
   selectTopics,
@@ -106,4 +110,5 @@ module.exports = {
   selectCommentsOfArticle,
   postCommentToArticle,
   patchArticleByID,
+  selectUsers,
 };
