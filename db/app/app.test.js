@@ -27,7 +27,7 @@ describe("get /api/topics", () => {
       });
   });
 
-    test("checks whether the response's length is bigger than 0", () => {
+    test("checks whether the response's length is correct", () => {
       return request(app)
         .get("/api/topics")
         .then((res) =>
@@ -63,7 +63,7 @@ describe("get /api/articles", () => {
       });
   });
 
-  test("checks whether the response's length is bigger than 0", () => {
+  test("checks whether the response's length is correct", () => {
     return request(app)
       .get("/api/articles")
       .then((res) => {
@@ -90,6 +90,29 @@ describe("get /api/articles", () => {
         })
       });
   });
+
+  test("GET: /api/articles?topic=coding, 200: accepts the coding query", () => {
+    return request(app)
+      .get("/api/articles?topic=coding")
+      .expect(200)
+      .then((res) => {
+        const articles = res.body.articles;
+        articles.forEach((article) => {
+          expect(article.topic).toBe("coding");
+        });
+      });
+  });
+
+    test("GET: /api/articles?sort_by=title, 200: accepts the sort_by by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          console.log(articles[0])
+          expect(articles[0].title).toBe("Z");
+        });
+    });
 });
 
 describe("get /api/articles/:id", () => {
