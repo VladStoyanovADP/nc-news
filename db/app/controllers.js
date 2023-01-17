@@ -3,7 +3,7 @@ const {
   selectArticles,
   selectArticleByID,
   selectCommentsOfArticle,
-  patchArticle,
+  patchArticleByID,
 } = require("./models.js");
 
 const getTopics = (req, res, next) => {
@@ -45,14 +45,14 @@ const getCommentsOfArticle = (req, res, next) => {
     .catch(next);
 };
 
-function patchArticleVotes(req, res, next) {
+function patchArticle(req, res, next) {
   const id = req.params.id;
   const { body } = req;
 
   // Making sure the article exists
   selectArticleByID(id).catch(next);
 
-  return patchArticle(id, body)
+  return patchArticleByID(id, body)
     .then((article) => {
       res.status(200).send({ article });
     })

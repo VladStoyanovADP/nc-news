@@ -58,7 +58,7 @@ function selectCommentsOfArticle(id) {
 }
 
 
-function patchArticle(id, body) {
+function patchArticleByID(id, body) {
   if (body.inc_votes) {
     return db
       .query(
@@ -84,5 +84,5 @@ module.exports = {
   selectArticles,
   selectArticleByID,
   selectCommentsOfArticle,
-  patchArticle,
+  patchArticleByID,
 };

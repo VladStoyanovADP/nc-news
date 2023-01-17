@@ -271,7 +271,6 @@ describe("get /api/articles/:id/comments", () => {
         expect(res.body.msg).toBe("Not Found");
       });
   });
-});
 
 
 describe("get /api/articles/:id/comments", () => {
