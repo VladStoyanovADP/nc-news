@@ -337,4 +337,33 @@ describe("PATCH", () => {
   });
 });
 
+describe.only("DELETE", () => {
+  test("should delete the comment with the given id and respond with status 204", () => {
+    return request(app).delete("/api/comments/3").expect(204).then(res =>
+    {
+      expect(res.noContent).toBe(true);
+    })
+  });
+
+    test("400: Should respond with bad request for invalid body", () => {
+      return request(app)
+        .delete(`/api/comments/dog`)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Invalid argument. ID must be a number.");
+        });
+    });
+
+    test("404: Should respond with not found for an id which is not in the database", () => {
+      return request(app)
+        .delete(`/api/comments/9391299`)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe(
+            `Could not delete: a comment with an ID of 9391299 does not exist.`
+          );
+        });
+    });
+});
+
 
