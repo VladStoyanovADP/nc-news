@@ -32,7 +32,6 @@ describe("get /api/topics", () => {
         .get("/api/topics")
         .then((res) =>
         {
-          console.log(index)
           expect(res.body.topics.length).toBe(index.topicData.length);
         });
     });
