@@ -3,6 +3,7 @@ const {
   selectArticles,
   selectArticleByID,
   selectCommentsOfArticle,
+  patchArticleByID,
 } = require("./models.js");
 
 const getTopics = (req, res, next) => {
@@ -33,20 +34,35 @@ const getArticleByID = (req, res, next) => {
 
 const getCommentsOfArticle = (req, res, next) => {
   const id = req.params.id;
-  
-    // Making sure the article exists
-    selectArticleByID(id).catch(next)
-    
-    return selectCommentsOfArticle(id)
-      .then((comments) => {
-        res.status(200).send({ comments });
-      })
-      .catch(next);
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return selectCommentsOfArticle(id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
 };
+
+function patchArticle(req, res, next) {
+  const id = req.params.id;
+  const { body } = req;
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return patchArticleByID(id, body)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
+}
 
 module.exports = {
   getTopics,
   getArticles,
   getArticleByID,
   getCommentsOfArticle,
+  patchArticle,
 };
