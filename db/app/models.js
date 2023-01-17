@@ -21,6 +21,8 @@ function selectArticles() {
     .then((result) => result.rows);
 }
 
+
+
 function selectArticleByID(id) {
   return db
     .query(
@@ -38,30 +40,50 @@ function selectArticleByID(id) {
     });
 }
 
-function postCommentToArticle(id, body) {
-  if (body.body && body.username)
-  {
+function selectCommentsOfArticle(id) {
+  return db
+    .query(
+      `
+      SELECT * 
+      FROM comments 
+      WHERE article_id = $1
+      ORDER BY created_at DESC;
+    `,
+      [id]
+    )
+    .then((result) => {
+      return result.rows
+        ? result.rows
+        : Promise.reject({ status: 404, msg: "Not Found" });
+    });
+}
+
+function patchArticleByID(id, body) {
+  if (body.inc_votes) {
     return db
       .query(
         `
-      INSERT INTO comments (author, body, article_id)
-      VALUES ($1, $2, $3)
-      RETURNING *;
+        UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *;
     `,
-        [body.username, body.body, id]
+        [body.inc_votes, id]
       )
-      .then((result) =>
-      {
-        return result.rows[0]
+      .then((result) => {
+        return result.rows[0];
       });
   } else {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 }
 
+
 module.exports = {
   selectTopics,
   selectArticles,
   selectArticleByID,
+  selectCommentsOfArticle,
+  patchArticleByID,
   postCommentToArticle,
 };

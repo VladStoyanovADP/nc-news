@@ -2,6 +2,8 @@ const {
   getTopics,
   getArticles,
   getArticleByID,
+  getCommentsOfArticle,
+  patchArticle,
   postComment,
 } = require("./controllers.js");
 const { postgresErr, customErr } = require("./errorHandlers");
@@ -13,8 +15,9 @@ app.use(express.json());
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
-
 app.get("/api/articles/:id", getArticleByID);
+
+app.patch("/api/articles/:id", patchArticle);
 
 app.post("/api/articles/:id/comments", postComment);
 
