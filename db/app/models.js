@@ -21,6 +21,7 @@ function selectArticles() {
     .then((result) => result.rows);
 }
 
+
 function selectArticleByID(id) {
   return db
     .query(
@@ -37,6 +38,25 @@ function selectArticleByID(id) {
         : Promise.reject({ status: 404, msg: "Not Found" });
     });
 }
+
+function selectCommentsOfArticle(id) {
+  return db
+    .query(
+      `
+      SELECT * 
+      FROM comments 
+      WHERE article_id = $1
+      ORDER BY created_at DESC;
+    `,
+      [id]
+    )
+    .then((result) => {
+      return result.rows
+        ? result.rows
+        : Promise.reject({ status: 404, msg: "Not Found" });
+    });
+}
+
 
 function patchArticle(id, body) {
   if (body.inc_votes) {
@@ -58,9 +78,11 @@ function patchArticle(id, body) {
   }
 }
 
+
 module.exports = {
   selectTopics,
   selectArticles,
   selectArticleByID,
+  selectCommentsOfArticle,
   patchArticle,
 };

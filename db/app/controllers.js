@@ -2,19 +2,25 @@ const {
   selectTopics,
   selectArticles,
   selectArticleByID,
+  selectCommentsOfArticle,
   patchArticle,
 } = require("./models.js");
 
-const getTopics = (req, res) => {
-  return selectTopics().then(topics => {
+const getTopics = (req, res, next) => {
+  return selectTopics()
+    .then((topics) => {
       res.status(200).send({ topics });
     })
+    .catch(next);
 };
 
-const getArticles = (req, res) => {
-  return selectArticles().then(articles => {
-    res.status(200).send({ articles });
-  });
+const getArticles = (req, res, next) => {
+  return selectArticles()
+    .then((articles) =>
+    {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
 };
 
 const getArticleByID = (req, res, next) => {
@@ -26,8 +32,20 @@ const getArticleByID = (req, res, next) => {
     .catch(next);
 };
 
-function patchArticleVotes(req, res, next)
-{
+const getCommentsOfArticle = (req, res, next) => {
+  const id = req.params.id;
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return selectCommentsOfArticle(id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+function patchArticleVotes(req, res, next) {
   const id = req.params.id;
   const { body } = req;
 
@@ -35,17 +53,16 @@ function patchArticleVotes(req, res, next)
   selectArticleByID(id).catch(next);
 
   return patchArticle(id, body)
-  .then(article =>
-  {
-    res.status(200).send({ article })
-  })
-  .catch(next);
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
 }
 
 module.exports = {
   getTopics,
   getArticles,
-  patchArticleVotes,
   getArticleByID,
-  patchArticleVotes
+  getCommentsOfArticle,
+  patchArticle,
 };
