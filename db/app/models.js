@@ -4,23 +4,50 @@ function selectTopics() {
   return db.query(`SELECT * FROM topics`).then((result) => result.rows);
 }
 
-function selectArticles() {
-  return db
-    .query(
-      `
+function selectArticles(sort_by = "created_at", order = "desc", topic) {
+  const validSortingQueries = [
+    "title",
+    "topic",
+    "author",
+    "body",
+    "votes",
+    "created_at",
+    "comment_count",
+  ];
+  const validOrderQueries = ["asc", "desc"];
+  const queryParams = [];
+  if (
+    !validSortingQueries.includes(sort_by) ||
+    !validOrderQueries.includes(order)
+  ) {
+    return Promise.reject({
+      status: 400,
+      message: "Invalid query.",
+    });
+  }
+  let selectQuery = `
       SELECT articles.*, 
       COUNT(comments.article_id) as comment_count
       FROM articles
       LEFT JOIN comments 
       ON articles.article_id = comments.article_id
-      GROUP BY articles.article_id 
-      ORDER BY articles.created_at 
-      DESC;
-    `
-    )
-    .then((result) => result.rows);
-}
+      `;
 
+  if (topic) {
+    queryParams.push(topic);
+    selectQuery += `
+		WHERE topic LIKE $1
+		GROUP BY (articles.article_id)
+		ORDER BY ${sort_by} ${order};
+		`;
+  } else {
+    selectQuery += `
+		GROUP BY (articles.article_id)
+		ORDER BY ${sort_by} ${order};
+		`;
+  }
+  return db.query(selectQuery, queryParams).then((result) => result.rows);
+}
 
 function selectArticleByID(id) {
   return db
