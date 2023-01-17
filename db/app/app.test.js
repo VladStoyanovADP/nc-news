@@ -109,7 +109,6 @@ describe("get /api/articles", () => {
         .expect(200)
         .then((res) => {
           const articles = res.body.articles;
-          console.log(articles[0])
           expect(articles[0].title).toBe("Z");
         });
     });
