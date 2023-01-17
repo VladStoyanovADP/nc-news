@@ -272,70 +272,52 @@ describe("get /api/articles/:id/comments", () => {
       });
   });
 
-
-describe("get /api/articles/:id/comments", () => {
-  test("responds with status 200", () => {
-    return request(app).get("/api/articles/3/comments").expect(200);
-  });
-
-  test("checks whether each article has the correct keys", () => {
-    return request(app)
-      .get("/api/articles/3/comments")
-      .then((res) => {
-        res.body.comments.forEach((comment) => {
+describe("/api/articles/:id/comments", () => {
+  describe("POST", () => {
+    test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
+      return request(app)
+        .post(`/api/articles/3/comments`)
+        .send({
+          body: "double paddy",
+          username: "butter_bridge",
+        })
+        .expect(201)
+        .then((res) => {
+          const comment = res.body.comment;
           expect(comment).toHaveProperty("comment_id");
           expect(comment).toHaveProperty("votes");
           expect(comment).toHaveProperty("created_at");
-          expect(comment).toHaveProperty("author");
-          expect(comment).toHaveProperty("body");
-          expect(comment).toHaveProperty("article_id");
+          expect(comment).toHaveProperty("author", "butter_bridge");
+          expect(comment).toHaveProperty("body", "double paddy");
+          expect(comment).toHaveProperty("article_id", 3);
         });
-      });
-  });
+    });
 
-  test("checks the type of the values", () => {
-    return request(app)
-      .get("/api/articles/3/comments")
-      .then((res) => {
-        res.body.comments.forEach((comment) => {
-          expect(typeof comment.comment_id).toBe("number");
-          expect(typeof comment.votes).toBe("number");
-          expect(typeof comment.created_at).toBe("string");
-          expect(typeof comment.author).toBe("string");
-          expect(typeof comment.body).toBe("string");
-          expect(typeof comment.article_id).toBe("number");
+    test("400: Should respond with bad request for invalid body on req", () => {
+      return request(app)
+        .post(`/api/articles/3/comments`)
+        .send({
+          notBody: "I hope that their first child, be a masculine child.",
+          username: "The Godfather",
+        })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad Request");
         });
-      });
-  });
+    });
 
-  test("checks whether the articles are ordered by date created", () => {
-    return request(app)
-      .get("/api/articles/3/comments")
-      .then((res) => {
-        expect(res.body.comments).toBeSortedBy("created_at", {
-          descending: true,
+    test("404: Should respond with not found for a id that does not have corresponding article", () => {
+      return request(app)
+        .post(`/api/articles/999/comments`)
+        .send({
+          body: "I hope that their first child, be a masculine child.",
+          username: "The Godfather",
+        })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Not Found");
         });
-      });
-  });
-
-  test("400: Should respond with Bad Request for invalid id", () => {
-    const id = "dog";
-
-    return request(app)
-      .get(`/api/articles/${id}/comments`)
-      .expect(400)
-      .then((res) => {
-        expect(res.body.msg).toBe("Bad Request");
-      });
-  });
-
-  test("404: Should respond with Not Found for id not in database ", () => {
-    return request(app)
-      .get(`/api/articles/999/comments`)
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("Not Found");
-      });
+    });
   });
 });
 
@@ -370,7 +352,6 @@ describe("PATCH", () => {
   });
 
   test("404: Should respond with not found for an id which is not in the database", () => {
-
     return request(app)
       .patch(`/api/articles/999`)
       .send({ inc_votes: 20 })
@@ -382,44 +363,3 @@ describe("PATCH", () => {
 });
 
 
-describe("PATCH", () => {
-  test("200: Should respond with the updated object with incremented votes", () => {
-    return request(app)
-      .patch(`/api/articles/1`)
-      .send({ inc_votes: 20 })
-      .expect(200)
-      .then((res) => {
-        const article = res.body.article;
-
-        expect(article).toHaveProperty("author");
-        expect(article).toHaveProperty("title");
-        expect(article).toHaveProperty("article_id", 1);
-        expect(article).toHaveProperty("body");
-        expect(article).toHaveProperty("topic");
-        expect(article).toHaveProperty("created_at");
-        expect(article).toHaveProperty("votes", 120);
-        expect(article).toHaveProperty("article_img_url");
-      });
-  });
-
-  test("400: Should respond with bad request for invalid body", () => {
-    return request(app)
-      .patch(`/api/articles/1`)
-      .send({ ic_votes: 20 })
-      .expect(400)
-      .then((res) => {
-        expect(res.body.msg).toBe("Bad Request");
-      });
-  });
-
-  test("404: Should respond with not found for an id which is not in the database", () => {
-
-    return request(app)
-      .patch(`/api/articles/999`)
-      .send({ inc_votes: 20 })
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("Not Found");
-      });
-  });
-});

@@ -57,6 +57,26 @@ function selectCommentsOfArticle(id) {
     });
 }
 
+function postCommentToArticle(id, body) {
+  if (body.body && body.username) {
+    return db
+      .query(
+        `
+      INSERT INTO comments
+      (body, author, article_id)
+      VALUES
+      ($1, $2, $3)
+      RETURNING *
+  `,
+        [body.body, body.username, id]
+      )
+      .then((result) => {
+        return result.rows[0];
+      });
+  } else {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+}
 
 function patchArticleByID(id, body) {
   if (body.inc_votes) {
@@ -84,5 +104,6 @@ module.exports = {
   selectArticles,
   selectArticleByID,
   selectCommentsOfArticle,
+  postCommentToArticle,
   patchArticleByID,
 };

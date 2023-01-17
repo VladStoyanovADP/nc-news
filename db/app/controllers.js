@@ -3,6 +3,7 @@ const {
   selectArticles,
   selectArticleByID,
   selectCommentsOfArticle,
+  postCommentToArticle,
   patchArticleByID,
 } = require("./models.js");
 
@@ -45,6 +46,20 @@ const getCommentsOfArticle = (req, res, next) => {
     .catch(next);
 };
 
+const postComment = (req, res, next) => {
+  const id = req.params.id;
+  const { body } = req;
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return postCommentToArticle(id, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
 function patchArticle(req, res, next) {
   const id = req.params.id;
   const { body } = req;
@@ -64,5 +79,6 @@ module.exports = {
   getArticles,
   getArticleByID,
   getCommentsOfArticle,
+  postComment,
   patchArticle,
 };
