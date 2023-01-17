@@ -4,6 +4,7 @@ const {
   selectArticleByID,
   selectCommentsOfArticle,
   patchArticleByID,
+  postCommentToArticle,
 } = require("./models.js");
 
 const getTopics = (req, res, next) => {
@@ -45,6 +46,7 @@ const getCommentsOfArticle = (req, res, next) => {
     .catch(next);
 };
 
+
 function patchArticle(req, res, next) {
   const id = req.params.id;
   const { body } = req;
@@ -59,10 +61,41 @@ function patchArticle(req, res, next) {
     .catch(next);
 }
 
+
+const postComment = (req, res, next) => {
+  const id = req.params.id;
+  const { body } = req;
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return postCommentToArticle(id, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+
+function patchArticle(req, res, next) {
+  const id = req.params.id;
+  const { body } = req;
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return patchArticleByID(id, body)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch(next);
+}
+
+
 module.exports = {
-  getTopics,
-  getArticles,
   getArticleByID,
   getCommentsOfArticle,
   patchArticle,
+  getArticleByID,
+  postComment,
 };

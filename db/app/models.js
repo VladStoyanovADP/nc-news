@@ -22,6 +22,7 @@ function selectArticles() {
 }
 
 
+
 function selectArticleByID(id) {
   return db
     .query(
@@ -57,7 +58,6 @@ function selectCommentsOfArticle(id) {
     });
 }
 
-
 function patchArticleByID(id, body) {
   if (body.inc_votes) {
     return db
@@ -85,4 +85,5 @@ module.exports = {
   selectArticleByID,
   selectCommentsOfArticle,
   patchArticleByID,
+  postCommentToArticle,
 };
