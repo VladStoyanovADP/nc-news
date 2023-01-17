@@ -21,7 +21,44 @@ function selectArticles() {
     .then((result) => result.rows);
 }
 
+function selectArticleByID(id) {
+  return db
+    .query(
+      `
+      SELECT * 
+      FROM articles 
+      WHERE article_id = $1;
+    `,
+      [id]
+    )
+    .then((result) => {
+      return result.rows.length !== 0
+        ? result.rows[0]
+        : Promise.reject({ status: 404, msg: "Not Found" });
+    })
+}
+
+function selectCommentsOfArticle(id) {
+  return db
+    .query(
+      `
+      SELECT * 
+      FROM comments 
+      WHERE article_id = $1
+      ORDER BY created_at DESC;
+    `,
+      [id]
+    )
+    .then((result) => {
+      return result.rows
+        ? result.rows
+        : Promise.reject({ status: 404, msg: "Not Found" });
+    })
+}
+
 module.exports = {
   selectTopics,
   selectArticles,
+  selectArticleByID,
+  selectCommentsOfArticle,
 };
