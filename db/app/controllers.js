@@ -7,7 +7,7 @@ const {
   patchArticleByID,
 } = require("./models.js");
 
-const endpointsInfo = require("../endpoints");
+const endpointsInfo = require("./endpoints");
 
 const getTopics = (req, res, next) => {
   return selectTopics()
@@ -77,7 +77,7 @@ function patchArticle(req, res, next) {
 }
 
 const getAllEndpoints = (req, res) => {
-  response.status(200).send({ endpointsInfo });
+  res.status(200).send({ endpointsInfo });
 };
 
 module.exports = {

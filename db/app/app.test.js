@@ -337,4 +337,12 @@ describe("PATCH", () => {
   });
 });
 
+describe("GET /api", () => {
+  test("200: Should respond with the correct status code", () => {
+  return request(app)
+    .get(`/api`)
+    .expect(200)
+    });
+});
+
 
