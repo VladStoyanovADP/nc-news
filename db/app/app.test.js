@@ -227,97 +227,50 @@ describe("get /api/articles/:id/comments", () => {
   });
 });
 
-  test("checks the type of the values", () => {
+describe("POST", () => {
+  test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
     return request(app)
-      .get("/api/articles/3")
+      .post(`/api/articles/3/comments`)
+      .send({
+        body: "double paddy",
+        username: "butter_bridge",
+      })
+      .expect(201)
       .then((res) => {
-        let article = res.body.article;
-        expect(typeof article.title).toBe("string");
-        expect(typeof article.topic).toBe("string");
-        expect(typeof article.author).toBe("string");
-        expect(typeof article.article_id).toBe("number");
-        expect(typeof article.body).toBe("string");
-        expect(typeof article.created_at).toBe("string");
-        expect(typeof article.votes).toBe("number");
-        expect(typeof article.article_img_url).toBe("string");
-      });
-  });
-  test("checks whether the articles are ordered by date created", () => {
-    return request(app)
-      .get("/api/articles")
-      .then((res) => {
-        expect(res.body.articles).toBeSortedBy("created_at", {
-          descending: true,
-        });
+        const comment = res.body.comment;
+        expect(comment).toHaveProperty("comment_id");
+        expect(comment).toHaveProperty("votes");
+        expect(comment).toHaveProperty("created_at");
+        expect(comment).toHaveProperty("author", "butter_bridge");
+        expect(comment).toHaveProperty("body", "double paddy");
+        expect(comment).toHaveProperty("article_id", 3);
       });
   });
 
-  test("400: Should respond with Bad Request for invalid id", () => {
-    const id = "dog";
-
+  test("400: Should respond with bad request for invalid body on req", () => {
     return request(app)
-      .get(`/api/articles/${id}`)
+      .post(`/api/articles/3/comments`)
+      .send({
+        notBody: "I hope that their first child, be a masculine child.",
+        username: "The Godfather",
+      })
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad Request");
       });
   });
 
-  test("404: Should respond with Not Found for id not in database ", () => {
+  test("404: Should respond with not found for a id that does not have corresponding article", () => {
     return request(app)
-      .get(`/api/articles/999`)
+      .post(`/api/articles/999/comments`)
+      .send({
+        body: "I hope that their first child, be a masculine child.",
+        username: "The Godfather",
+      })
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("Not Found");
       });
-  });
-
-describe("/api/articles/:id/comments", () => {
-  describe("POST", () => {
-    test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
-      return request(app)
-        .post(`/api/articles/3/comments`)
-        .send({
-          body: "double paddy",
-          username: "butter_bridge",
-        })
-        .expect(201)
-        .then((res) => {
-          const comment = res.body.comment;
-          expect(comment).toHaveProperty("comment_id");
-          expect(comment).toHaveProperty("votes");
-          expect(comment).toHaveProperty("created_at");
-          expect(comment).toHaveProperty("author", "butter_bridge");
-          expect(comment).toHaveProperty("body", "double paddy");
-          expect(comment).toHaveProperty("article_id", 3);
-        });
-    });
-
-    test("400: Should respond with bad request for invalid body on req", () => {
-      return request(app)
-        .post(`/api/articles/3/comments`)
-        .send({
-          notBody: "I hope that their first child, be a masculine child.",
-          username: "The Godfather",
-        })
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe("Bad Request");
-        });
-    });
-
-    test("404: Should respond with not found for a id that does not have corresponding article", () => {
-      return request(app)
-        .post(`/api/articles/999/comments`)
-        .send({
-          body: "I hope that their first child, be a masculine child.",
-          username: "The Godfather",
-        })
-        .expect(404)
-        .then((res) => {
-          expect(res.body.msg).toBe("Not Found");
-        });
-    });
   });
 });
 
