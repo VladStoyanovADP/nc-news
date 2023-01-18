@@ -22,8 +22,4 @@ app.use(commentsRouter);
 app.use(postgresErr);
 app.use(customErr);
 
-app.all("*", (req, res) => {
-  app.status(404).send({ msg: "Bad Request" });
-});
-
 module.exports = app;

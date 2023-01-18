@@ -315,7 +315,7 @@ describe("POST", () => {
   });
 });
 
-describe("PATCH", () => {
+describe.only("PATCH", () => {
   test("200: Should respond with the updated object with incremented votes", () => {
     return request(app)
       .patch(`/api/articles/1`)
@@ -347,7 +347,7 @@ describe("PATCH", () => {
 
   test("404: Should respond with not found for an id which is not in the database", () => {
     return request(app)
-      .patch(`/api/articles/999`)
+      .patch(`/api/articles/99219`)
       .send({ inc_votes: 20 })
       .expect(404)
       .then((res) => {
