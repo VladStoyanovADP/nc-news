@@ -6,6 +6,7 @@ const {
   postCommentToArticle,
   patchArticleByID,
   selectUsers,
+  deleteCommentByID,
 } = require("./models.js");
 
 const getTopics = (req, res, next) => {
@@ -83,6 +84,25 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
+const deleteComment = (req, res, next) => {
+  const id = req.params.id;
+  deleteCommentByID(id)
+    .then((result) => {
+      if (result.rowCount === 1) {
+        res.status(204).send({ });
+      }
+      else if (result.rowCount === 0)
+      {
+        res.status(404).send({
+          msg: `Could not delete: a comment with an ID of ${id} does not exist.`,
+        });
+      }
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   getTopics,
   getArticles,
@@ -91,4 +111,5 @@ module.exports = {
   postComment,
   patchArticle,
   getUsers,
+  deleteComment,
 };

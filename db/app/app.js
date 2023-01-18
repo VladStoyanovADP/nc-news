@@ -6,6 +6,7 @@ const {
   postComment,
   patchArticle,
   getUsers,
+  deleteComment,
 } = require("./controllers.js");
 const { postgresErr, customErr } = require("./errorHandlers");
 const express = require("express");
@@ -26,6 +27,8 @@ app.post("/api/articles/:id/comments", postComment);
 app.patch("/api/articles/:id", patchArticle);
 
 app.get("/api/users", getUsers);
+
+app.delete("/api/comments/:id", deleteComment);
 
 app.use(postgresErr);
 app.use(customErr);
