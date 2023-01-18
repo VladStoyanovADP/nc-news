@@ -315,7 +315,7 @@ describe("POST", () => {
   });
 });
 
-describe("PATCH", () => {
+describe("PATCH ARTICLE", () => {
   test("200: Should respond with the updated object with incremented votes", () => {
     return request(app)
       .patch(`/api/articles/1`)
@@ -440,6 +440,44 @@ describe("GET /api/users/:username", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("Username not found in database.");
+      });
+  });
+});
+
+describe.only("PATCH COMMENT", () => {
+  test("200: Should respond with the updated object with incremented votes", () => {
+    return request(app)
+      .patch(`/api/comments/2`)
+      .send({ inc_votes: 20 })
+      .expect(200)
+      .then((res) => {
+        const comment = res.body.result;
+
+        expect(comment).toHaveProperty("body");
+        expect(comment).toHaveProperty("votes");
+        expect(comment).toHaveProperty("author");
+        expect(comment).toHaveProperty("article_id", comment.article_id);
+        expect(comment).toHaveProperty("created_at");
+      });
+  });
+
+  test("400: Should respond with bad request for invalid body", () => {
+    return request(app)
+      .patch(`/api/comments/1`)
+      .send({ ic_votes: 20 })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+
+  test("404: Should respond with not found for an id which is not in the database", () => {
+    return request(app)
+      .patch(`/api/comments/121312`)
+      .send({ inc_votes: 20 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Not Found");
       });
   });
 });
