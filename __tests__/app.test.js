@@ -1,8 +1,8 @@
 const request = require("supertest");
-const app = require("./app");
-const seed = require("../seeds/seed");
-const db = require("../connection");
-const index = require("../data/test-data/index");
+const app = require("../app");
+const seed = require("../db/seeds/seed");
+const db = require("../db/connection");
+const index = require("../db/data/test-data/index");
 
 beforeEach(() => {
     return seed(index);
@@ -381,7 +381,7 @@ describe("get /api/users", () => {
   });
 });
 
-describe.only("DELETE", () => {
+describe("DELETE", () => {
   test("should delete the comment with the given id and respond with status 204", () => {
     return request(app).delete("/api/comments/3").expect(204).then(res =>
     {

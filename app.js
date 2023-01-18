@@ -8,7 +8,7 @@ const {
   getUsers,
   deleteComment,
   getAllEndpoints,
-} = require("./controllers.js");
+} = require("./controllers/controllers.js");
 const { postgresErr, customErr } = require("./errorHandlers");
 const express = require("express");
 const app = express();

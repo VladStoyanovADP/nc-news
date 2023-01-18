@@ -7,9 +7,9 @@ const {
   patchArticleByID,
   selectUsers,
   deleteCommentByID,
-} = require("./models.js");
+} = require("../models/models.js");
 
-const endpointsInfo = require("./endpoints");
+const endpointsInfo = require("../endpoints");
 
 const getTopics = (req, res, next) => {
   return selectTopics()
