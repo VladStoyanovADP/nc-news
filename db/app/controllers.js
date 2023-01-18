@@ -5,6 +5,7 @@ const {
   selectCommentsOfArticle,
   postCommentToArticle,
   patchArticleByID,
+  selectUsers,
 } = require("./models.js");
 
 const getTopics = (req, res, next) => {
@@ -16,9 +17,9 @@ const getTopics = (req, res, next) => {
 };
 
 const getArticles = (req, res, next) => {
-  return selectArticles()
-    .then((articles) =>
-    {
+  const { sort_by, order, topic } = req.query;
+  return selectArticles(sort_by, order, topic)
+    .then((articles) => {
       res.status(200).send({ articles });
     })
     .catch(next);
@@ -74,6 +75,14 @@ function patchArticle(req, res, next) {
     .catch(next);
 }
 
+const getUsers = (req, res, next) => {
+  return selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch(next);
+};
+
 module.exports = {
   getTopics,
   getArticles,
@@ -81,4 +90,5 @@ module.exports = {
   getCommentsOfArticle,
   postComment,
   patchArticle,
+  getUsers,
 };
