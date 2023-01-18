@@ -1,37 +1,23 @@
-const {
-  getTopics,
-  getArticles,
-  getArticleByID,
-  getCommentsOfArticle,
-  postComment,
-  patchArticle,
-  getUsers,
-  deleteComment,
-  getAllEndpoints,
-} = require("./controllers/controllers.js");
 const { postgresErr, customErr } = require("./errorHandlers");
 const express = require("express");
+
+const apiRouter = require("./routes/api-router");
+const articlesRouter = require("./routes/articles-router");
+const usersRouter = require("./routes/users-router");
+const topicsRouter = require("./routes/topics-router");
+const commentsRouter = require("./routes/comments-router");
+const cors = require("cors");
+
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-app.get("/api/topics", getTopics);
-
-app.get("/api/articles", getArticles);
-
-app.get("/api/articles/:id", getArticleByID);
-
-app.get("/api/articles/:id/comments", getCommentsOfArticle);
-
-app.post("/api/articles/:id/comments", postComment);
-
-app.patch("/api/articles/:id", patchArticle);
-
-app.get("/api/users", getUsers);
-
-app.delete("/api/comments/:id", deleteComment);
-
-app.get("/api", getAllEndpoints);
+app.use(apiRouter);
+app.use(usersRouter);
+app.use(articlesRouter);
+app.use(topicsRouter);
+app.use(commentsRouter);
 
 app.use(postgresErr);
 app.use(customErr);

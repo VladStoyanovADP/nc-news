@@ -1,10 +1,6 @@
-const db = require("../db/connection.js");
+const db = require("../db/connection");
 
-function selectTopics() {
-  return db.query(`SELECT * FROM topics`).then((result) => result.rows);
-}
-
-function selectArticles(sort_by = "created_at", order = "desc", topic) {
+module.exports.selectArticles = (sort_by = "created_at", order = "desc", topic) => {
   const validSortingQueries = [
     "title",
     "topic",
@@ -49,7 +45,7 @@ function selectArticles(sort_by = "created_at", order = "desc", topic) {
   return db.query(selectQuery, queryParams).then((result) => result.rows);
 }
 
-function selectArticleByID(id) {
+module.exports.selectArticleByID = (id) => {
   return db
     .query(
       `
@@ -70,7 +66,7 @@ function selectArticleByID(id) {
     });
 }
 
-function selectCommentsOfArticle(id) {
+module.exports.selectCommentsOfArticle = (id) => {
   return db
     .query(
       `
@@ -88,7 +84,7 @@ function selectCommentsOfArticle(id) {
     });
 }
 
-function postCommentToArticle(id, body) {
+module.exports.postCommentToArticle = (id, body) => {
   if (body.body && body.username) {
     return db
       .query(
@@ -109,7 +105,7 @@ function postCommentToArticle(id, body) {
   }
 }
 
-function patchArticleByID(id, body) {
+module.exports.patchArticleByID = (id, body) => {
   if (body.inc_votes) {
     return db
       .query(
@@ -128,29 +124,3 @@ function patchArticleByID(id, body) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 }
-
-function selectUsers() {
-  return db.query(`SELECT * FROM users`).then((users) => users.rows);
-}
-
-
-const deleteCommentByID = (id) => {
-  if (isNaN(id)) {
-    return Promise.reject({
-      status: 400,
-      msg: "Invalid argument. ID must be a number.",
-    });
-  }
-  return db.query("DELETE FROM comments WHERE comment_id = $1;", [id]);
-};
-
-module.exports = {
-  selectTopics,
-  selectArticles,
-  selectArticleByID,
-  selectCommentsOfArticle,
-  postCommentToArticle,
-  patchArticleByID,
-  selectUsers,
-  deleteCommentByID,
-};
