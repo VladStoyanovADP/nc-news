@@ -5,7 +5,6 @@ module.exports.deleteComment = (req, res, next) => {
   deleteCommentByID(id)
     .then((result) => {
       if (result.rowCount === 1) {
-        console.log(result.rowCount)
         res.status(204).send({});
       } else if (result.rowCount === 0) {
         res.status(404).send({

@@ -61,7 +61,6 @@ module.exports.selectArticleByID = (id) => {
     )
       .then((result) =>
       {
-        console.log(result.rows.length)
       return result.rows.length !== 0
         ? result.rows[0]
         : Promise.reject({ status: 404, msg: "Not Found" });
