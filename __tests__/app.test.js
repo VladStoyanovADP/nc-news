@@ -315,7 +315,7 @@ describe("POST", () => {
   });
 });
 
-describe.only("PATCH", () => {
+describe("PATCH", () => {
   test("200: Should respond with the updated object with incremented votes", () => {
     return request(app)
       .patch(`/api/articles/1`)
@@ -416,6 +416,32 @@ describe("GET /api", () => {
     .get(`/api`)
     .expect(200)
     });
+});
+
+describe("GET /api/users/:username", () => {
+  test("should respond with an object which should have the following properties: username, avatar_url, name.", () => {
+    return request(app)
+      .get(`/api/users/rogersop`)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toBeInstanceOf(Object);
+        expect(res.body.user).toMatchObject({
+          username: `rogersop`,
+          name: "paul",
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+        });
+      });
+  });
+
+  test("404: Should respond with not found for an id which is not in the database", () => {
+    return request(app)
+      .get(`/api/users/notindb`)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Username not found in database.");
+      });
+  });
 });
 
 

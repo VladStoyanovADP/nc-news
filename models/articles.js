@@ -107,7 +107,8 @@ module.exports.postCommentToArticle = (id, body) => {
 }
 
 module.exports.patchArticleByID = (id, body) => {
-  if (body.inc_votes) {
+  if (body.inc_votes) 
+  {
     return db
       .query(
         `
@@ -118,10 +119,14 @@ module.exports.patchArticleByID = (id, body) => {
     `,
         [body.inc_votes, id]
       )
-      .then((result) => {
-        return result.rows[0];
-      });
-  } else {
-    return Promise.reject({ status: 400, msg: "Bad Request" });
+      .then((result) =>
+      {
+        if (result.rowCount === 0)
+        {
+          return Promise.reject({ status: 404, msg: "Not Found" });
+        }
+        else return result.rows[0]
+      })
   }
+  else return Promise.reject({ status: 400, msg: "Bad Request" });
 }
