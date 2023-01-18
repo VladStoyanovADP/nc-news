@@ -5,6 +5,7 @@ const {
   selectCommentsOfArticle,
   postCommentToArticle,
   patchArticleByID,
+  selectUsers,
   deleteCommentByID,
 } = require("./models.js");
 
@@ -75,6 +76,14 @@ function patchArticle(req, res, next) {
     .catch(next);
 }
 
+const getUsers = (req, res, next) => {
+  return selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch(next);
+};
+
 const deleteComment = (req, res, next) => {
   const id = req.params.id;
   deleteCommentByID(id)
@@ -101,5 +110,6 @@ module.exports = {
   getCommentsOfArticle,
   postComment,
   patchArticle,
+  getUsers,
   deleteComment,
 };

@@ -27,11 +27,10 @@ describe("get /api/topics", () => {
       });
   });
 
-    test("checks whether the response's length is correct", () => {
+    test("checks whether the response's length correct", () => {
       return request(app)
         .get("/api/topics")
-        .then((res) =>
-        {
+        .then((res) => {
           expect(res.body.topics.length).toBe(index.topicData.length);
         });
     });
@@ -91,17 +90,35 @@ describe("get /api/articles", () => {
       });
   });
 
-  test("GET: /api/articles?topic=coding, 200: accepts the coding query", () => {
-    return request(app)
-      .get("/api/articles?topic=coding")
-      .expect(200)
-      .then((res) => {
-        const articles = res.body.articles;
-        articles.forEach((article) => {
-          expect(article.topic).toBe("coding");
+    test("checks the type of the values", () => {
+      return request(app)
+        .get("/api/articles")
+        .then((res) => {
+          res.body.articles.forEach((article) => {
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.topic).toBe("string");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.body).toBe("string");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("string");
+          });
         });
-      });
-  });
+    });
+
+    test("GET: /api/articles?topic=coding, 200: accepts the coding query", () => {
+      return request(app)
+        .get("/api/articles?topic=coding")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          articles.forEach((article) => {
+            expect(article.topic).toBe("coding");
+          });
+        });
+    });
 
     test("GET: /api/articles?sort_by=title, 200: accepts the sort_by by query", () => {
       return request(app)
@@ -132,6 +149,7 @@ describe("get /api/articles/:id", () => {
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url");
+        expect(article).toHaveProperty("comment_count");
       });
   });
 
@@ -149,6 +167,7 @@ describe("get /api/articles/:id", () => {
         expect(typeof article.created_at).toBe("string");
         expect(typeof article.votes).toBe("number");
         expect(typeof article.article_img_url).toBe("string");
+        expect(typeof article.comment_count).toBe("string");
       });
   });
   test("checks whether the articles are ordered by date created", () => {
@@ -333,6 +352,31 @@ describe("PATCH", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe("get /api/users", () => {
+  test("responds with status 200", () => {
+    return request(app).get("/api/users").expect(200);
+  });
+  test("rchecks whether each users has the correct keys", () => {
+    return request(app)
+      .get("/api/users")
+      .then((res) => {
+        res.body.users.forEach((user) => {
+          expect(user).toHaveProperty("username");
+          expect(user).toHaveProperty("name");
+          expect(user).toHaveProperty("avatar_url");
+        });
+      });
+  });
+
+  test("checks whether the response's length is bigger than 0", () => {
+    return request(app)
+      .get("/api/users")
+      .then((res) => {
+        expect(res.body.users.length).toBe(index.userData.length);
       });
   });
 });
