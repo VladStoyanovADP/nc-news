@@ -149,6 +149,7 @@ describe("get /api/articles/:id", () => {
         expect(article).toHaveProperty("created_at");
         expect(article).toHaveProperty("votes");
         expect(article).toHaveProperty("article_img_url");
+        expect(article).toHaveProperty("comment_count");
       });
   });
 
@@ -166,6 +167,7 @@ describe("get /api/articles/:id", () => {
         expect(typeof article.created_at).toBe("string");
         expect(typeof article.votes).toBe("number");
         expect(typeof article.article_img_url).toBe("string");
+        expect(typeof article.comment_count).toBe("string");
       });
   });
   test("checks whether the articles are ordered by date created", () => {
