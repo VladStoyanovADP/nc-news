@@ -7,6 +7,7 @@ const {
   patchArticle,
   getUsers,
   deleteComment,
+  getAllEndpoints,
 } = require("./controllers.js");
 const { postgresErr, customErr } = require("./errorHandlers");
 const express = require("express");
@@ -29,6 +30,8 @@ app.patch("/api/articles/:id", patchArticle);
 app.get("/api/users", getUsers);
 
 app.delete("/api/comments/:id", deleteComment);
+
+app.get("/api", getAllEndpoints);
 
 app.use(postgresErr);
 app.use(customErr);

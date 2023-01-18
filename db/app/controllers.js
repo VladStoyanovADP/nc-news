@@ -9,6 +9,8 @@ const {
   deleteCommentByID,
 } = require("./models.js");
 
+const endpointsInfo = require("./endpoints");
+
 const getTopics = (req, res, next) => {
   return selectTopics()
     .then((topics) => {
@@ -103,6 +105,10 @@ const deleteComment = (req, res, next) => {
     });
 };
 
+const getAllEndpoints = (req, res) => {
+  res.status(200).send({ endpointsInfo });
+};
+
 module.exports = {
   getTopics,
   getArticles,
@@ -112,4 +118,5 @@ module.exports = {
   patchArticle,
   getUsers,
   deleteComment,
+  getAllEndpoints,
 };
