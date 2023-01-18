@@ -444,7 +444,7 @@ describe("GET /api/users/:username", () => {
   });
 });
 
-describe.only("PATCH COMMENT", () => {
+describe("PATCH COMMENT", () => {
   test("200: Should respond with the updated object with incremented votes", () => {
     return request(app)
       .patch(`/api/comments/2`)
