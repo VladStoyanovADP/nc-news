@@ -482,4 +482,41 @@ describe("PATCH COMMENT", () => {
   });
 });
 
+describe("POST", () => {
+  test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
+    const article = {
+      author: "icellusedkars",
+      title: "Larry's article",
+      body: "Larry was a little lamb",
+      topic: "mitch",
+    };
+    return request(app)
+      .post(`/api/articles`)
+      .send(article)
+      .expect(201)
+      .then((res) => {
+        const article = res.body.article;
+        expect(article).toHaveProperty("title");
+        expect(article).toHaveProperty("topic");
+        expect(article).toHaveProperty("author");
+        expect(article).toHaveProperty("body");
+        expect(article).toHaveProperty("votes");
+        expect(article).toHaveProperty("article_img_url");
+      });
+  });
+
+  test("400: Should respond with bad request for invalid body on req", () => {
+    return request(app)
+      .post(`/api/articles`)
+      .send({
+        notBody: "I hope that their first child, be a masculine child.",
+        username: "The Godfather",
+      })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+});
+
 

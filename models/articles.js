@@ -130,3 +130,26 @@ module.exports.patchArticleByID = (id, body) => {
   }
   else return Promise.reject({ status: 400, msg: "Bad Request" });
 }
+
+module.exports.postNewArticle = (body) => {
+  if (body.author && body.title && body.body && body.topic) {
+    return db
+      .query(
+        `
+        INSERT INTO articles
+        (title, topic, author, body, article_img_url, votes)
+        VALUES
+        ($1, $2, $3, $4, $5, $6)
+        RETURNING *;
+        `,
+        [body.title, body.topic, body.author, body.body, body.article_img_url, 0]
+      )
+      .then((result) => {
+        return result.rows[0];
+      });
+  }
+  else
+  {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+};

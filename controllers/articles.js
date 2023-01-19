@@ -4,6 +4,7 @@ const {
   selectCommentsOfArticle,
   postCommentToArticle,
   patchArticleByID,
+  postNewArticle,
 } = require("../models/articles");
 
 module.exports.getArticles = (req, res, next) => {
@@ -64,3 +65,19 @@ module.exports.patchArticle = (req, res, next) => {
     })
     .catch(next);
 }
+
+module.exports.postArticle = (req, res, next) => {
+  const { body } = req;
+
+  // if (!body.article_img_url)
+  // {
+  //   body.article_img_url =
+  //   "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+  // }
+  
+  return postNewArticle(body)
+    .then((article) => {
+      res.status(201).send({ article });
+    })
+    .catch(next);
+};
