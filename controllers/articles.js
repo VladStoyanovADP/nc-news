@@ -27,11 +27,12 @@ module.exports.getArticleByID = (req, res, next) => {
 
 module.exports.getCommentsOfArticle = (req, res, next) => {
   const id = req.params.id;
+  const { limit, p } = req.query;
 
   // Making sure the article exists
   selectArticleByID(id).catch(next);
 
-  return selectCommentsOfArticle(id)
+  return selectCommentsOfArticle(id, limit, p)
     .then((comments) => {
       res.status(200).send({ comments });
     })

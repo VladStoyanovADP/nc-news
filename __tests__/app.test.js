@@ -253,6 +253,22 @@ describe("get /api/articles/:id/comments", () => {
       });
   });
 
+  test("accepts the ?limit query", () => {
+    return request(app)
+      .get("/api/articles/3/comments/?limit=2")
+      .then((res) => {
+        expect(res.body.comments.length).toBe(2);
+      });
+  });
+
+  test("accepts the ?p query", () => {
+    return request(app)
+      .get("/api/articles/3/comments?p=1")
+      .then((res) => {
+        expect(res.body.comments[0].article_id).toBe(3);
+      });
+  });
+
   test("checks whether the articles are ordered by date created", () => {
     return request(app)
       .get("/api/articles/3/comments")

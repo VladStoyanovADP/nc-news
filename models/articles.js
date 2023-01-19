@@ -78,14 +78,26 @@ module.exports.selectArticleByID = (id) => {
     });
 }
 
-module.exports.selectCommentsOfArticle = (id) => {
+module.exports.selectCommentsOfArticle = (id, limit = 10, p = 0) => {
+  if (
+    !typeof limit === "number" ||
+    !typeof p === "number"
+  )
+  {
+    return Promise.reject({
+      status: 400,
+      message: "Invalid query.",
+    });
+  }
   return db
     .query(
       `
       SELECT * 
       FROM comments 
       WHERE article_id = $1
-      ORDER BY created_at DESC;
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+      OFFSET ${p};
     `,
       [id]
     )
@@ -94,7 +106,7 @@ module.exports.selectCommentsOfArticle = (id) => {
         ? result.rows
         : Promise.reject({ status: 404, msg: "Not Found" });
     });
-}
+};
 
 module.exports.postCommentToArticle = (id, body) => {
   if (body.body && body.username) {
