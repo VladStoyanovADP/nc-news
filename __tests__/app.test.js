@@ -551,4 +551,34 @@ describe("POST", () => {
   });
 });
 
+describe("POST", () => {
+  test('201: Should respond with newly created comment object when passed a "body" and "username"', () => {
+    return request(app)
+      .post(`/api/topics`)
+      .send({
+        slug: "double paddy",
+        description: "butter_bridge",
+      })
+      .expect(201)
+      .then((res) => {
+        const comment = res.body.topic;
+        expect(comment).toHaveProperty("slug", "double paddy");
+        expect(comment).toHaveProperty("description", "butter_bridge");
+      });
+  });
+
+  test("400: Should respond with bad request for invalid body on req", () => {
+    return request(app)
+      .post(`/api/topics`)
+      .send({
+        notBody: "I hope that their first child, be a masculine child.",
+        username: "The Godfather",
+      })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+});
+
 
