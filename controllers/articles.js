@@ -8,10 +8,10 @@ const {
 } = require("../models/articles");
 
 module.exports.getArticles = (req, res, next) => {
-  const { sort_by, order, topic } = req.query;
-  return selectArticles(sort_by, order, topic)
-    .then((articles) => {
-      res.status(200).send({ articles });
+  const { sort_by, order, topic, limit, p } = req.query;
+  return selectArticles(sort_by, order, topic, limit, p)
+    .then(({ articles, article_count }) => {
+      res.status(200).send({ articles, article_count });
     })
     .catch(next);
 };
@@ -69,11 +69,11 @@ module.exports.patchArticle = (req, res, next) => {
 module.exports.postArticle = (req, res, next) => {
   const { body } = req;
 
-  // if (!body.article_img_url)
-  // {
-  //   body.article_img_url =
-  //   "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-  // }
+  if (!body.article_img_url)
+  {
+    body.article_img_url =
+    "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+  }
   
   return postNewArticle(body)
     .then((article) => {

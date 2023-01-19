@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-module.exports.selectArticles = (sort_by = "created_at", order = "desc", topic) => {
+module.exports.selectArticles = (sort_by = "created_at", order = "desc", topic, limit = 10, p = 0) => {
   const validSortingQueries = [
     "title",
     "topic",
@@ -11,13 +11,14 @@ module.exports.selectArticles = (sort_by = "created_at", order = "desc", topic) 
     "comment_count",
   ];
   const validOrderQueries = ["asc", "desc"];
-  const queryParams = [];
   if (
     !validSortingQueries.includes(sort_by) ||
-    !validOrderQueries.includes(order)
-  ) {
-    return Promise.reject({
-      status: 400,
+    !validOrderQueries.includes(order) ||
+    !typeof limit === "number" ||
+    !typeof p === "number"
+    ) {
+      return Promise.reject({
+        status: 400,
       message: "Invalid query.",
     });
   }
@@ -28,21 +29,31 @@ module.exports.selectArticles = (sort_by = "created_at", order = "desc", topic) 
       LEFT JOIN comments 
       ON articles.article_id = comments.article_id
       `;
-
+      
+  const queryParams = [];
   if (topic) {
     queryParams.push(topic);
     selectQuery += `
 		WHERE topic LIKE $1
 		GROUP BY (articles.article_id)
-		ORDER BY ${sort_by} ${order};
+		ORDER BY ${sort_by} ${order}
+    LIMIT ${limit}
+    OFFSET ${p};
 		`;
   } else {
     selectQuery += `
 		GROUP BY (articles.article_id)
-		ORDER BY ${sort_by} ${order};
+		ORDER BY ${sort_by} ${order}
+    LIMIT ${limit}
+    OFFSET ${p};
 		`;
   }
-  return db.query(selectQuery, queryParams).then((result) => result.rows);
+  return db
+    .query(selectQuery, queryParams)
+    .then((result) =>
+    {
+      return { articles: result.rows, article_count: result.rows.length };
+    });
 }
 
 module.exports.selectArticleByID = (id) => {

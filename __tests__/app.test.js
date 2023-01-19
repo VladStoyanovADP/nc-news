@@ -62,11 +62,27 @@ describe("get /api/articles", () => {
       });
   });
 
-  test("checks whether the response's length is correct", () => {
+  test("accepts the ?limit query", () => {
+    return request(app)
+      .get("/api/articles?limit=6")
+      .then((res) => {
+        expect(res.body.articles.length).toBe(6);
+      });
+  });
+
+  test("tests the article_count property", () => {
     return request(app)
       .get("/api/articles")
       .then((res) => {
-        expect(res.body.articles.length).toBe(index.articleData.length);
+        expect(res.body.article_count).toBe(10);
+      });
+  });
+
+  test("accepts the ?p query", () => {
+    return request(app)
+      .get("/api/articles?p=1")
+      .then((res) => {
+        expect(res.body.articles[0].article_id).toBe(6);
       });
   });
 
@@ -153,7 +169,6 @@ describe("get /api/articles/:id", () => {
       });
   });
 
-  
   test("checks the type of the values", () => {
     return request(app)
       .get("/api/articles/3")
@@ -170,6 +185,7 @@ describe("get /api/articles/:id", () => {
         expect(typeof article.comment_count).toBe("string");
       });
   });
+
   test("checks whether the articles are ordered by date created", () => {
     return request(app)
       .get("/api/articles")
