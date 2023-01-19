@@ -5,6 +5,7 @@ const {
   postCommentToArticle,
   patchArticleByID,
   postNewArticle,
+  deleteArticleByID,
 } = require("../models/articles");
 
 module.exports.getArticles = (req, res, next) => {
@@ -81,4 +82,20 @@ module.exports.postArticle = (req, res, next) => {
       res.status(201).send({ article });
     })
     .catch(next);
+};
+
+module.exports.deleteArticle = (req, res, next) => {
+  const id = req.params.id;
+
+  // Making sure the article exists
+  selectArticleByID(id).catch(next);
+
+  return deleteArticleByID(id)
+    .then(() => {
+
+      res.status(204).send({});
+    })
+    .catch((error) => {
+      next(error);
+    });
 };

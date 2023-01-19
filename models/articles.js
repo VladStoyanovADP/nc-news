@@ -176,3 +176,16 @@ module.exports.postNewArticle = (body) => {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 };
+
+module.exports.deleteArticleByID = (id) => {
+  if (isNaN(id)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid argument. ID must be a number.",
+    });
+  }
+  else
+  {
+    return db.query("DELETE FROM articles WHERE article_id = $1;", [id]);
+  } 
+};
