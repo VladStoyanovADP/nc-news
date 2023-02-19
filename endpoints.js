@@ -95,13 +95,12 @@ module.exports = [
     "GET /api/users/:user_id": {
       description: "Responds with a specific user",
       exampleResponse: {
-        user:
-          {
-            username: "tickle122",
-            name: "Tom Tickle",
-            avatar_url:
-              "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953",
-          },
+        user: {
+          username: "tickle122",
+          name: "Tom Tickle",
+          avatar_url:
+            "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953",
+        },
       },
     },
     "GET /api/articles/:id": {
@@ -213,7 +212,7 @@ module.exports = [
           },
         ],
       },
-    },  
+    },
     "PATCH /api/articles/:id/comments": {
       description:
         "Request body accepts: an object in the example below and it will increment the votes based on article_id.",
@@ -334,7 +333,7 @@ module.exports = [
             created_at: "2020-06-18T20:08:00.000Z",
             votes: 0,
             comment_count: 5,
-          }
+          },
         ],
       },
     },
@@ -342,8 +341,7 @@ module.exports = [
       description: "Delete the given comment by comment_id.",
       queries: [],
     },
-  },
-     "DELETE /api/articles/:id": {
+    "DELETE /api/articles/:id": {
       description: "Delete the given article by id.",
       queries: [],
     },
