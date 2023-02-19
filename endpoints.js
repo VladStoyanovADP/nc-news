@@ -92,6 +92,18 @@ module.exports = [
         ],
       },
     },
+    "GET /api/users/:user_id": {
+      description: "Responds with a specific user",
+      exampleResponse: {
+        user:
+          {
+            username: "tickle122",
+            name: "Tom Tickle",
+            avatar_url:
+              "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953",
+          },
+      },
+    },
     "GET /api/articles/:id": {
       description:
         "Responds with an article object with following properties: author, title, article_id, body, topic, created_at, votes.",
@@ -171,6 +183,76 @@ module.exports = [
           author: "master",
           votes: 0,
           created_at: "2022-10-13T20:57:16.487Z",
+        },
+      },
+    },
+    "POST /api/topics": {
+      description:
+        "Request body accepts: an object in the example below and it will respond with all the topics including the new one.",
+      "body example": {
+        body: "Alias quos temporibus",
+      },
+      queries: [],
+      exampleResponse: {
+        topics: [
+          {
+            slug: "coding",
+            description: "Code is love, code is life",
+          },
+          {
+            slug: "football",
+            description: "FOOTIE!",
+          },
+          {
+            slug: "cooking",
+            description: "Hey good looking, what you got cooking?",
+          },
+          {
+            slug: "new",
+            description: "new topic guys!",
+          },
+        ],
+      },
+    },  
+    "PATCH /api/articles/:id/comments": {
+      description:
+        "Request body accepts: an object in the example below and it will increment the votes based on article_id.",
+      "body example": { inc_votes: "newVote" },
+      queries: [],
+      exampleResponse: {
+        article: {
+          article_id: 3,
+          title: "Please stop worrying about Angular 3",
+          topic: "coding",
+          author: "jessjelly",
+          body: "Another Angular version planned already? Whaaaat? Didn’t Angular 2 just ship? Why Angular 3? What? Why? First off, there is no massive rewrite, and won’t be for Angular 3. Secondly, let me explain the future of Angular 2 and what Angular 3, Angular 4 will mean for you.",
+          created_at: "2020-11-22T11:13:00.000Z",
+          votes: 1,
+          article_img_url:
+            "https://images.pexels.com/photos/14011035/pexels-photo-14011035.jpeg?w=700&h=700",
+          comment_count: 5,
+        },
+      },
+    },
+    "POST /api/articles": {
+      description:
+        "Request body accepts: an object in the example below and it will respond with the posted article.",
+      "body example": {
+        body: "Alias quos temporibus",
+      },
+      queries: [],
+      exampleResponse: {
+        article: {
+          article_id: 3,
+          title: "Please stop worrying about Angular 3",
+          topic: "coding",
+          author: "jessjelly",
+          body: "Another Angular version planned already? Whaaaat? Didn’t Angular 2 just ship? Why Angular 3? What? Why? First off, there is no massive rewrite, and won’t be for Angular 3. Secondly, let me explain the future of Angular 2 and what Angular 3, Angular 4 will mean for you.",
+          created_at: "2020-11-22T11:13:00.000Z",
+          votes: 1,
+          article_img_url:
+            "https://images.pexels.com/photos/14011035/pexels-photo-14011035.jpeg?w=700&h=700",
+          comment_count: 0,
         },
       },
     },
@@ -258,6 +340,11 @@ module.exports = [
     },
     "DELETE /api/comments/:comment_id": {
       description: "Delete the given comment by comment_id.",
+      queries: [],
+    },
+  },
+     "DELETE /api/articles/:id": {
+      description: "Delete the given article by id.",
       queries: [],
     },
   },
