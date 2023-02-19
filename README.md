@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is a demonstration of a RESTful API written in JavaScript and using Express JS alongside PostgreSQL as a database.
+This project is a demonstration of a RESTful API written in JavaScript and using Express JS alongside PostgreSQL as a database management system.
 
 A user is able to interact with news data with the following methods:
 
