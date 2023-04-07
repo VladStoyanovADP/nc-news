@@ -31,6 +31,10 @@ This will be used as the backend for an upcoming front-end application built wit
 
 You can see a live version of this app, hosted with `React`:
 
+https://63f21adf39e955618b3f5943--effortless-moonbeam-f74416.netlify.app/
+
+And the API without the frontend:
+
 https://nc-news-api-fpd6.onrender.com/api
 
 ## Setup Instructions
